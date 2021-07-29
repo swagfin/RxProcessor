@@ -6,14 +6,14 @@ using System.Reactive.Linq;
 
 namespace RxProcessor.ObservableSubscribers
 {
-    public class TestCarRegSubscriber : IProcessorInitializable
+    public class TestCarSubscriber : IProcessorInitializable
     {
-        private ILogger<TestCarRegSubscriber> logger;
+        private ILogger<TestCarSubscriber> logger;
         private readonly ICarsObservableProvider _provider;
 
         private IObservable<CarRegistration> CarRegStream;
 
-        public TestCarRegSubscriber(ILogger<TestCarRegSubscriber> logger, ICarsObservableProvider provider)
+        public TestCarSubscriber(ILogger<TestCarSubscriber> logger, ICarsObservableProvider provider)
         {
             this.logger = logger;
             this._provider = provider;

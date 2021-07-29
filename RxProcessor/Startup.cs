@@ -26,15 +26,15 @@ namespace RxProcessor
 
             //Add my Content Providers as (Singletons)
             services.AddSingleton<ICarsObservableProvider, CarsObservableProvider>();
-            services.AddSingleton<IProcessorInitializable>(svc => svc.GetRequiredService<ICarsObservableProvider>());
+            services.AddSingleton<IProcessorInitializable>(svc => svc.GetRequiredService<ICarsObservableProvider>()); //We need to register IProcessorInitializable to allow it to be included in Initialization
 
             //Add my Subscribers as (Singletons)
-            services.AddSingleton<IProcessorInitializable, TestCarRegSubscriber>();
-            services.AddSingleton<IProcessorInitializable, YetAnotherCarRegSubscriber>();
-
+            services.AddSingleton<IProcessorInitializable, TestCarSubscriber>();
+            services.AddSingleton<IProcessorInitializable, YetAnotherCarSubscriber>();
             //For all the Above to be Initialized/Booted Up call app.UseProcessInitializables();
 
             services.AddControllers();
+            services.AddSignalR();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reactive Processor", Version = "v1" });
@@ -55,7 +55,7 @@ namespace RxProcessor
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rx Processor - v1"));
             }
 
-            app.UseHttpsRedirection();
+            //disabling for now app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -63,6 +63,7 @@ namespace RxProcessor
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllers();
             });
         }
