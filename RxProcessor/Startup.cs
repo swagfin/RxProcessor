@@ -5,9 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using RxProcessor.Extensions;
+using RxProcessor.Models;
 using RxProcessor.ObservableProviders;
 using RxProcessor.ObservableProviders.Implementation;
 using RxProcessor.ObservableSubscribers;
+using RxProcessor.Processors;
 
 namespace RxProcessor
 {
@@ -27,12 +29,13 @@ namespace RxProcessor
             //Add my Content Providers as (Singletons)
             services.AddSingleton<ICarsObservableProvider, CarsObservableProvider>();
             services.AddSingleton<IProcessorInitializable>(svc => svc.GetRequiredService<ICarsObservableProvider>()); //We need to register IProcessorInitializable to allow it to be included in Initialization
-
+            services.AddTransient<IProcessorInitializable,RegisteredCarsProcessor>();
             //Add my Subscribers as (Singletons)
             services.AddSingleton<IProcessorInitializable, TestCarSubscriber>();
             services.AddSingleton<IProcessorInitializable, YetAnotherCarSubscriber>();
             //For all the Above to be Initialized/Booted Up call app.UseProcessInitializables();
 
+            services.Configure<ConfigOptions>(Configuration.GetSection("ConfigOptions"));
             services.AddControllers();
             services.AddSignalR();
             services.AddSwaggerGen(c =>
