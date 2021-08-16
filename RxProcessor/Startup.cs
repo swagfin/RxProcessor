@@ -28,11 +28,15 @@ namespace RxProcessor
 
             //Add my Content Providers as (Singletons)
             services.AddSingleton<ICarsObservableProvider, CarsObservableProvider>();
+            services.AddSingleton<ISparesObservableProvider, SparesObservableProvider>();
             services.AddSingleton<IProcessorInitializable>(svc => svc.GetRequiredService<ICarsObservableProvider>()); //We need to register IProcessorInitializable to allow it to be included in Initialization
-            services.AddTransient<IProcessorInitializable,RegisteredCarsProcessor>();
+            services.AddSingleton<IProcessorInitializable>(svc => svc.GetRequiredService<ISparesObservableProvider>()); //We need to register IProcessorInitializable to allow it to be included in Initialization
+            services.AddTransient<IProcessorInitializable, RegisteredCarsProcessor>();
+            services.AddTransient<IProcessorInitializable, RegisteredSparesProcessor>();
             //Add my Subscribers as (Singletons)
             services.AddSingleton<IProcessorInitializable, TestCarSubscriber>();
             services.AddSingleton<IProcessorInitializable, YetAnotherCarSubscriber>();
+            services.AddSingleton<IProcessorInitializable, TestSparesSubscriber>();
             //For all the Above to be Initialized/Booted Up call app.UseProcessInitializables();
 
             services.Configure<ConfigOptions>(Configuration.GetSection("ConfigOptions"));
