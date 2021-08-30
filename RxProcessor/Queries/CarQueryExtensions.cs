@@ -14,5 +14,16 @@ namespace RxProcessor.Queries
             var carsCount = allCars.Window(TimeSpan.FromSeconds(numberOfSeconds)).Select(x => x.Distinct(x => x.Id).Count()).Merge();
             return carsCount;
         }
+        public static IObservable<IObservable<CarRegistration>> GetCarsByPeriod(this IObservable<CarRegistration> allCars, int numberOfSeconds)
+        {
+            var carsCount = allCars.Window(TimeSpan.FromSeconds(numberOfSeconds));
+            return carsCount;
+        }
+        public static IObservable<IList<CarRegistration>> GetCarsList(this IObservable<CarRegistration> allCars, int numberOfSeconds)
+        {
+            var cars = allCars.Buffer(TimeSpan.FromSeconds(numberOfSeconds));
+            return cars;
+        }
+
     }
 }
